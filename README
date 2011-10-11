@@ -1,0 +1,3 @@
+This is a collection of all purpose R scripts used for my research in molecular biology. I put them on github for traceability and version control, so please do not copy-paste the code. Instead, use 'git clone git@gui11aume/Rscripts.git' to have the full version history.
+
+The code is here for reproducibility and mistake-tracking purposes, but feel free to copy, reuse and modify it in any way you like.
