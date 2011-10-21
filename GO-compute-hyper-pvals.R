@@ -43,7 +43,7 @@ GO.pvals <- function(GOtable,
                k = GOtable[m+1,i],
                lower.tail = TRUE
          );
-         sign[phigher < plower,i] <- - 1;
+         sign[phigher > plower,i] <- - 1;
          pvals[,i] = 2 * apply(cbind(plower, phigher), MARGIN=1, min);
       }
       else {
