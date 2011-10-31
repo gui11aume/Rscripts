@@ -1,9 +1,17 @@
 violin.plot <- function (x, x.scaling=1, autoscale=0.995, 
-   individual.scaling = FALSE, median.bar="grey50", x.pos, ...) {
+   individual.scaling=FALSE, median.bar="grey50", x.pos, ...) {
 # x: a list/data.frame of values.
 # x.scaling: an x scaling factor to apply to the densities.
 # autoscale: the minimum proportion of the data to be displayed.
+# individual.scaling: whether violins should have the same max width.
+# median.bar: color of the median bar, NA for none.
+# x.pos: positions of the plots on the x axis.
 # ...: density, angle, border, col, and lty are passed to polygon().
+# Other parameters are passed to plot().
+
+# -- Test calls -- #
+# violin.plot(list(rnorm(100), 1+rnorm(100)), col=1:2)
+# violin.plot(data.frame(x=rnorm(100), y=1+rnorm(100)), col=1:2)
 
    if (autoscale < 0 || autoscale > 1) {
       stop ("'autoscale' outside the interval [0,1]");
