@@ -1,8 +1,14 @@
-venn.plot <-function(areaA, areaB, areaAB, areaTot, main,
-   labels=TRUE) {
+venn.plot <-function(areaA, areaB, areaAB, areaTot, main, labels=TRUE) {
    #
    require(grid);
       
+   if (!all(c(areaA, areaB, areaAB) > 0)) {
+      stop("Venn plot requires strictly positive values");
+   }
+
+   if (!missing(areaTot) && (areaTot < areaA + areaB - areaAB)) {
+      stop("specified value of areaTot is inconsistent");
+   }
 
    # DRY function to get the distance between centers that
    # gives the specified shared area.
