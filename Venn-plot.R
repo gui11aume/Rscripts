@@ -15,13 +15,13 @@ venn.plot <-function(areaA, areaB, areaAB, areaTot, main,
          if (d > (r + R)) {
             return (0);
          }
-         else if (d < (R-r)) {
-            return (pi * r^2);
+         else if (d < abs(R-r)) {
+            return (pi * min(R, r)^2);
          }
          # x is the part of the distance in the small disc.
          # l is the half segment defined by the intersection.
          # ... a bit of a geometric black box, I admit.
-         x <- (d - (R-r^2)/d) / 2;
+         x <- (d - (R^2-r^2)/d) / 2;
          l <- sqrt(r^2 - x^2);
          alpha <- acos((d-x)/R);
          beta <- acos(x/r);
@@ -41,7 +41,8 @@ venn.plot <-function(areaA, areaB, areaAB, areaTot, main,
 
    }
 
-   # Normalize circle radii: either R or r = 1.
+   # Normalize circle radius: the largest is set to 1,
+   # so the larger area is pi.
    R <- sqrt(areaA / max(c(areaA, areaB)));
    r <- sqrt(areaB / max(c(areaA, areaB)));
    a <- pi * areaAB / max(c(areaA, areaB));
@@ -49,24 +50,29 @@ venn.plot <-function(areaA, areaB, areaAB, areaTot, main,
 
    grid.newpage();
 
-  ## ---
-  # TODO: rescale to the device size.
+   # ---------------------------------------------
+   # A note on the scaling.                       
+   #                                              
+   # The width of the viewport is 1 "snpc" so the 
+   # larger radius is 0.25 "snpc": all dimensions 
+   # have to be divided by 4.                     
+   # ---------------------------------------------
 
    # Get the coordinates of the center.
-   center.x <- unit(0.5, "npc") + unit(R-r, "inch");
+   center.x <- unit(0.5, "npc") + unit((R-r)/8, "snpc");
    center.y <- unit(0.5, "npc");
 
    # Plot the discs.
    grid.circle(
-      x = center.x - unit(d, "inch"),
+      x = center.x - unit(d/8, "snpc"),
       y = center.y,
-      r = unit(2*R, "inch"),
+      r = unit(R/4, "snpc"),
       gp = gpar(fill = "red", alpha = 0.5)
    );
    grid.circle(
-      x = center.x + unit(d, "inch"),
+      x = center.x + unit(d/8, "snpc"),
       y = center.y,
-      r = unit(2*r, "inch"),
+      r = unit(r/4, "snpc"),
       gp = gpar(fill = "blue", alpha = 0.5)
    );
 
@@ -76,7 +82,7 @@ venn.plot <-function(areaA, areaB, areaAB, areaTot, main,
          label = main,
          just = "center",
          x = unit(0.5, "npc"),  # (real page center)
-         y = unit(0.5, "npc") + unit(2.8, "inch"),
+         y = unit(1, "npc") - unit(1, "cm"),
          gp = gpar(cex = 1.5)
       );
    }
@@ -86,15 +92,15 @@ venn.plot <-function(areaA, areaB, areaAB, areaTot, main,
       if (areaAB > 0) {
          grid.text(
             label = as.character(areaAB),
-            x = center.x + unit(R-r, "inch"),
+            x = center.x + unit((R-r)/8, "snpc"),
             y = center.y
          );
       }
       if (areaA - areaAB > 0) {
          xA <- if(d - (r-1) > .15)
-               center.x - unit(r + R, "inch")
+               center.x - unit((r+R)/8, "snpc")
             else
-               center.x - unit(d + 2.5*R, "inch");
+               center.x - unit((d+2.5*R)/8, "snpc");
          grid.text(
             label = as.character(areaA - areaAB),
             x = xA,
@@ -103,9 +109,9 @@ venn.plot <-function(areaA, areaB, areaAB, areaTot, main,
       }
       if (areaB - areaAB > 0) {
          xB <- if(d + (r-1) > .15)
-               center.x + unit(r + R, "inch")
+               center.x + unit((r+R)/8, "snpc")
             else
-               center.x + unit(d + 2.5*r, "inch");
+               center.x + unit((d+2.5*r)/8, "snpc");
          grid.text(
             label = as.character(areaB - areaAB),
             x = xB,
@@ -121,9 +127,9 @@ venn.plot <-function(areaA, areaB, areaAB, areaTot, main,
       a.expt <- pi * areaA * areaB / areaTot^2;
       d.expt <- find.d(R=R, r=r, a=a.expt);
       grid.circle(
-         x = center.x + unit(d.expt, "inch"),
+         x = center.x + unit((2*d.expt-d)/8, "snpc"),
          y = center.y,
-         r = unit(2*r, "inch"),
+         r = unit(r/4, "snpc"),
          gp = gpar(lty = 2)
       );
 
